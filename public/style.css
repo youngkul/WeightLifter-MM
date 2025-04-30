@@ -1,0 +1,109 @@
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: linear-gradient(to right, #dbeafe, #e0f2fe);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+
+.container {
+  width: 100%;
+  max-width: 560px;
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  margin: 30px auto;
+}
+
+
+h2 {
+  text-align: center;
+  color: #2e7d32;
+  margin-bottom: 30px;
+  font-size: 26px;
+}
+
+
+input, select {
+  width: 100%;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background: #f8f9fa;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #636684;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+}
+
+
+button {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  background-color: #575771;
+  color: white;
+  margin-bottom: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+}
+
+button:hover {
+  background-color: #43a047;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+
+.hidden {
+  display: none;
+}
+
+
+#profileImage {
+  max-width: 100%;
+  margin-top: 10px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+canvas {
+  margin-top: 20px;
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+
+@media (max-width: 600px) {
+  .container {
+    margin: 20px;
+    padding: 30px 20px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  input, select, button {
+    font-size: 15px;
+  }
+}
