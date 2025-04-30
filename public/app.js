@@ -1,6 +1,6 @@
 // 🔥 Supabase 기반 Global Weightlifting Tracker - app.js (전체 코드)
 // 기능: 회원가입, 로그인, 체중 기록, 종목별 기록, 프로필 이미지 업로드/삭제, 그래프
-
+import { loadWeightChart, loadRecordsChart } from "./charts.js";
 import { supabase } from "./supabase-config.js";
 
 const loginSection = document.getElementById("loginSection");
