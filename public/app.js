@@ -1,5 +1,3 @@
-// 🔥 Supabase 기반 Global Weightlifting Tracker - app.js (전체 코드)
-// 기능: 회원가입, 로그인, 체중 기록, 종목별 기록, 프로필 이미지 업로드/삭제, 그래프
 import { loadWeightChart, loadRecordsChart } from "./charts.js";
 import { supabase } from "./supabase-config.js";
 
@@ -8,7 +6,6 @@ const mainSection = document.getElementById("mainSection");
 const welcome = document.getElementById("welcome");
 const weightList = document.getElementById("weightList");
 
-// 로그인 상태 확인
 async function checkAuth() {
   const { data: { session } } = await supabase.auth.getSession();
   if (session) {
@@ -66,7 +63,7 @@ function logout() {
   supabase.auth.signOut();
 }
 
-// 체중 기록 저장
+// 체중 저장
 async function saveWeight() {
   const date = document.getElementById("weightDateInput").value;
   const weight = parseFloat(document.getElementById("weightInput").value);
@@ -78,7 +75,7 @@ async function saveWeight() {
   loadWeightList(session.user);
 }
 
-// 체중 목록 불러오기
+// 아코디언 스타일 체중 목록 불러오기
 async function loadWeightList(user) {
   const { data, error } = await supabase
     .from("weights")
@@ -87,18 +84,30 @@ async function loadWeightList(user) {
     .order("date", { ascending: true });
 
   weightList.innerHTML = "";
+
   data.forEach(row => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${row.date}</td>
-      <td>${row.weight}</td>
-      <td><button onclick="deleteWeight(${row.id})">삭제</button></td>
+    const item = document.createElement("div");
+    item.className = "accordion-item";
+    item.innerHTML = `
+      <button class="accordion-header">${row.date}</button>
+      <div class="accordion-body">
+        <p>체중: ${row.weight}kg</p>
+        <button onclick="deleteWeight(${row.id})">삭제</button>
+      </div>
     `;
-    weightList.appendChild(tr);
+    weightList.appendChild(item);
+  });
+
+  document.querySelectorAll(".accordion-header").forEach(button => {
+    button.addEventListener("click", () => {
+      button.classList.toggle("active");
+      const body = button.nextElementSibling;
+      body.style.display = body.style.display === "block" ? "none" : "block";
+    });
   });
 }
 
-// 체중 기록 삭제
+// 체중 삭제
 async function deleteWeight(id) {
   if (!confirm("정말 삭제하시겠습니까?")) return;
   await supabase.from("weights").delete().eq("id", id);
@@ -139,7 +148,6 @@ async function uploadProfileImage() {
   loadProfileImage(session.user);
 }
 
-
 // 프로필 이미지 불러오기
 async function loadProfileImage(user) {
   const { data, error } = await supabase.storage
@@ -150,13 +158,12 @@ async function loadProfileImage(user) {
 
   if (error || !data?.publicUrl) {
     console.error("이미지 불러오기 실패:", error?.message);
-    img.src = "";  // 이미지 없을 때 기본값
+    img.src = "";
     return;
   }
 
   img.src = data.publicUrl;
 }
-
 
 // 프로필 이미지 삭제
 async function deleteProfileImage() {
@@ -180,3 +187,4 @@ window.deleteProfileImage = deleteProfileImage;
 window.deleteWeight = deleteWeight;
 
 checkAuth();
+

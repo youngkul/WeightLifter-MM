@@ -30,14 +30,39 @@ async function loadWeightChart(user) {
       datasets: [{
         label: "체중 변화 (kg)",
         data: weights,
-        borderColor: "#007bff",
-        backgroundColor: "rgba(0,123,255,0.1)",
         fill: true,
-        tension: 0.4,
-        pointRadius: 5
+        borderColor: "#4f46e5",
+        backgroundColor: "rgba(79,70,229,0.1)",
+        pointBackgroundColor: "#4f46e5",
+        pointBorderColor: "#fff",
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        tension: 0.4
       }]
     },
-    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            color: "#333",
+            font: { size: 14, weight: "bold" }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: false,
+          ticks: {
+            color: "#333",
+            callback: value => `${value}kg`
+          }
+        },
+        x: {
+          ticks: { color: "#666" }
+        }
+      }
+    }
   });
 }
 
