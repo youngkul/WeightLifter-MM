@@ -34,11 +34,15 @@ async function showMainUI(user) {
     .from("players")
     .select("role")
     .eq("uid", user.id)
-    .maybeSingle();
-
+    .maybeSingle();  // ← 여러 개거나 없을 때도 에러 대신 null 반환
 
   if (error) {
     console.error("역할 불러오기 오류:", error.message);
+    return;
+  }
+
+  if (!data) {
+    console.warn("유저 역할 정보를 찾을 수 없습니다.");
     return;
   }
 
