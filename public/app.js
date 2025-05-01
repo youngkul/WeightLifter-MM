@@ -231,6 +231,7 @@ window.uploadProfileImage = uploadProfileImage;
 window.deleteProfileImage = deleteProfileImage;
 window.deleteWeight = deleteWeight;
 
-checkAuth();
-
+document.addEventListener("DOMContentLoaded", () => {
+  checkAuth();
+});
 
