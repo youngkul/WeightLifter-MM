@@ -157,10 +157,9 @@ async function loadWeightList(user) {
   document.querySelectorAll(".accordion-header").forEach(button => {
     button.addEventListener("click", () => {
       button.classList.toggle("active");
-      const body = button.nextElementSibling;
-      body.style.display = body.style.display === "block" ? "none" : "block";
     });
   });
+  
 }
 
 
