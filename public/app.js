@@ -34,7 +34,8 @@ async function showMainUI(user) {
     .from("players")
     .select("role")
     .eq("uid", user.id)
-    .single();
+    .maybeSingle();
+
 
   if (error) {
     console.error("역할 불러오기 오류:", error.message);
