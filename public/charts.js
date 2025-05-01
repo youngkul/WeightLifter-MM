@@ -47,9 +47,17 @@ async function loadRecordsChart(user) {
     .from("records")
     .select("*")
     .eq("uid", user.id)
-    .single();
+    .maybeSingle();  // 🔧 여기서 single → maybeSingle로 변경
 
-  if (error || !data) return;
+  if (error) {
+    console.error("종목 기록 불러오기 오류:", error.message);
+    return;
+  }
+
+  if (!data) {
+    console.warn("종목 기록이 없습니다.");
+    return;
+  }
 
   const ctx = document.getElementById("recordsChart").getContext("2d");
 
@@ -62,8 +70,12 @@ async function loadRecordsChart(user) {
       datasets: [{
         label: "기록 (kg)",
         data: [
-          data.snatch, data.cleanJerk, data.backSquat,
-          data.frontSquat, data.deadlift, data.benchPress
+          data.snatch || 0,
+          data.cleanJerk || 0,
+          data.backSquat || 0,
+          data.frontSquat || 0,
+          data.deadlift || 0,
+          data.benchPress || 0
         ],
         backgroundColor: [
           "#007bff", "#6610f2", "#28a745", "#17a2b8", "#ffc107", "#dc3545"
@@ -78,3 +90,4 @@ window.loadWeightChart = loadWeightChart;
 window.loadRecordsChart = loadRecordsChart;
 
 export { loadWeightChart, loadRecordsChart };
+

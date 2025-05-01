@@ -139,12 +139,24 @@ async function uploadProfileImage() {
   loadProfileImage(session.user);
 }
 
+
 // 프로필 이미지 불러오기
 async function loadProfileImage(user) {
-  const { data, error } = await supabase.storage.from("profiles").getPublicUrl(`${user.id}.jpg`);
+  const { data, error } = await supabase.storage
+    .from("profiles")
+    .getPublicUrl(`${user.id}.jpg`);
+
   const img = document.getElementById("profileImage");
-  img.src = data.publicUrl || "";
+
+  if (error || !data?.publicUrl) {
+    console.error("이미지 불러오기 실패:", error?.message);
+    img.src = "";  // 이미지 없을 때 기본값
+    return;
+  }
+
+  img.src = data.publicUrl;
 }
+
 
 // 프로필 이미지 삭제
 async function deleteProfileImage() {

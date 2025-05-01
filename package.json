@@ -1,0 +1,23 @@
+{
+  "name": "weightlifter-mm",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/youngkul/WeightLifter-MM.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/youngkul/WeightLifter-MM/issues"
+  },
+  "homepage": "https://github.com/youngkul/WeightLifter-MM#readme",
+  "description": "",
+  "dependencies": {
+    "chart.js": "^4.4.9"
+  }
+}
