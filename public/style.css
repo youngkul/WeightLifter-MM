@@ -139,3 +139,37 @@ canvas {
 .accordion-header.active + .accordion-body {
   display: block;
 }
+details summary {
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: bold;
+  background: #f3f4f6;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+details[open] > summary::after {
+  content: " ▲";
+}
+details > summary::after {
+  content: " ▼";
+  margin-left: 6px;
+}
+
+#weightTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+#weightTable th, #weightTable td {
+  border: 1px solid #e0e0e0;
+  padding: 10px;
+  text-align: center;
+}
+
+#weightTable th {
+  background-color: #f1f5f9;
+  font-weight: bold;
+}
