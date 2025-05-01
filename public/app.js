@@ -24,29 +24,67 @@ supabase.auth.onAuthStateChange((_event, session) => {
   }
 });
 
-function showMainUI(user) {
+async function showMainUI(user) {
   loginSection.classList.add("hidden");
   mainSection.classList.remove("hidden");
   welcome.innerText = `환영합니다, ${user.email}!`;
+
+  // 👉 role 조회
+  const { data, error } = await supabase
+    .from("players")
+    .select("role")
+    .eq("uid", user.id)
+    .single();
+
+  if (error) {
+    console.error("역할 불러오기 오류:", error.message);
+    return;
+  }
+
+  const role = data.role;
+  console.log("로그인 사용자 역할:", role);
+
+  if (role === "superadmin") {
+    document.getElementById("superAdminPanel").classList.remove("hidden");
+  } else if (role === "admin") {
+    document.getElementById("teamAdminPanel").classList.remove("hidden");
+  } else {
+    document.getElementById("playerPanel").classList.remove("hidden");
+  }
+
   loadWeightChart(user);
   loadRecordsChart(user);
   loadProfileImage(user);
   loadWeightList(user);
 }
 
-// 회원가입
-async function signup() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const country = document.getElementById("country").value.trim();
-  const team = document.getElementById("team").value.trim();
 
-  if (!country || !team) return alert("국가와 팀을 입력하세요.");
+// ✅ 회원가입
+async function signup() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const region = document.getElementById("region").value;
+  const team = document.getElementById("team").value.trim();
+  const name = document.getElementById("playerName").value.trim();
+
+  if (!region || !team || !name) {
+    return alert("시/도, 팀명, 선수 이름을 모두 입력하세요.");
+  }
 
   const { data, error } = await supabase.auth.signUp({ email, password });
   if (error) return alert(error.message);
 
-  await supabase.from("players").insert([{ email, country, team }]);
+  // ✅ 추가 정보 저장
+  await supabase.from("players").insert([
+    {
+      email,
+      region,
+      team,
+      name,
+      role: "player"  // 기본은 일반 선수로 등록
+    }
+  ]);
+
   alert("회원가입 성공! 로그인해주세요.");
 }
 
@@ -187,4 +225,5 @@ window.deleteProfileImage = deleteProfileImage;
 window.deleteWeight = deleteWeight;
 
 checkAuth();
+
 
