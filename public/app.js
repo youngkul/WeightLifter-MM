@@ -28,6 +28,7 @@ async function showMainUI(user) {
   loginSection.classList.add("hidden");
   mainSection.classList.remove("hidden");
   welcome.innerText = `환영합니다, ${user.email}!`;
+  console.log("user.id:", user.id);  // ✅ 이 줄 추가
 
   // 👉 role 조회
   const { data, error } = await supabase
@@ -82,6 +83,7 @@ async function signup() {
   // ✅ 추가 정보 저장
   await supabase.from("players").insert([
     {
+      uid: data.user.id,
       email,
       region,
       team,
