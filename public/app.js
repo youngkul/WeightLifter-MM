@@ -163,6 +163,7 @@ async function loadWeightList(user) {
   });
 }
 
+
 // 체중 삭제
 async function deleteWeight(id) {
   if (!confirm("정말 삭제하시겠습니까?")) return;
