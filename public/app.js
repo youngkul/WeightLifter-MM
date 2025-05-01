@@ -51,10 +51,13 @@ async function showMainUI(user) {
   console.log("로그인 사용자 역할:", role);
 
   if (role === "superadmin") {
+    console.log("✅ superadmin 조건 통과"); 
     document.getElementById("superAdminPanel").classList.remove("hidden");
   } else if (role === "admin") {
+    console.log("✅ admin 조건 통과");
     document.getElementById("teamAdminPanel").classList.remove("hidden");
   } else {
+    console.log("✅ player 조건 통과");
     document.getElementById("playerPanel").classList.remove("hidden");
   }
 

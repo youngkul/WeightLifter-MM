@@ -173,3 +173,32 @@ details > summary::after {
   background-color: #f1f5f9;
   font-weight: bold;
 }
+#superAdminPanel {
+  border-left: 6px solid #2e7d32;
+  background-color: #e8f5e9;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+}
+
+#teamAdminPanel {
+  border-left: 6px solid #1e88e5;
+  background-color: #e3f2fd;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+}
+
+#playerPanel {
+  border-left: 6px solid #f57c00;
+  background-color: #fff3e0;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+}
+
+#superAdminPanel h3,
+#teamAdminPanel h3,
+#playerPanel h3 {
+  margin-top: 0;
+}
