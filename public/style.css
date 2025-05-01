@@ -107,3 +107,35 @@ canvas {
     font-size: 15px;
   }
 }
+.accordion-item {
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  background: #f9fafb;
+}
+
+.accordion-header {
+  background-color: #e2e8f0;
+  padding: 14px;
+  font-weight: bold;
+  width: 100%;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.accordion-header:hover {
+  background-color: #cbd5e1;
+}
+
+.accordion-body {
+  padding: 14px;
+  display: none;
+  background-color: #ffffff;
+}
+
+.accordion-header.active + .accordion-body {
+  display: block;
+}
