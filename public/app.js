@@ -115,37 +115,54 @@ async function loadWeightList(user) {
     .eq("uid", user.id)
     .order("date", { ascending: true });
 
-  weightList.innerHTML = "";
+  if (error) {
+    console.error("데이터 불러오기 오류:", error.message);
+    return;
+  }
+
+  console.log("불러온 데이터:", data);
+
+  weightList.innerHTML = ""; // 기존 내용 초기화
+
+  if (!data || data.length === 0) {
+    weightList.innerHTML = "<p>체중 기록이 없습니다.</p>";
+    return;
+  }
 
   data.forEach(row => {
     const item = document.createElement("div");
     item.className = "accordion-item";
+
     item.innerHTML = `
       <button class="accordion-header">${row.date}</button>
-      <div class="accordion-body">
+      <div class="accordion-body" style="display:none;">
         <p>체중: ${row.weight}kg</p>
         <button onclick="deleteWeight(${row.id})">삭제</button>
       </div>
     `;
+
     weightList.appendChild(item);
   });
 
-  // ✅ 아코디언 기능 정상 작동
+  // ✅ 접고 펴기 이벤트 연결
   document.querySelectorAll(".accordion-header").forEach(header => {
     header.addEventListener("click", () => {
       const body = header.nextElementSibling;
-      const isOpen = body.style.display === "block";
+      const isVisible = body.style.display === "block";
 
+      // 모든 아코디언 닫기
       document.querySelectorAll(".accordion-body").forEach(b => b.style.display = "none");
       document.querySelectorAll(".accordion-header").forEach(h => h.classList.remove("active"));
 
-      if (!isOpen) {
+      // 현재만 토글
+      if (!isVisible) {
         body.style.display = "block";
         header.classList.add("active");
       }
     });
   });
 }
+
 
 // 체중 삭제
 async function deleteWeight(id) {
