@@ -11,6 +11,7 @@ async function checkAuth() {
   const {
     data: { session },
   } = await supabase.auth.getSession();
+
   if (session) {
     showMainUI(session.user);
   } else {
@@ -21,8 +22,9 @@ async function checkAuth() {
 
 // 인증 상태 변경 감지
 supabase.auth.onAuthStateChange((_event, session) => {
-  if (session) showMainUI(session.user);
-  else {
+  if (session) {
+    showMainUI(session.user);
+  } else {
     loginSection.classList.remove("hidden");
     mainSection.classList.add("hidden");
   }
@@ -50,6 +52,12 @@ async function showMainUI(user) {
     return;
   }
 
+  // 모든 역할 패널 먼저 숨기기
+  document.getElementById("superAdminPanel").classList.add("hidden");
+  document.getElementById("teamAdminPanel").classList.add("hidden");
+  document.getElementById("playerPanel").classList.add("hidden");
+
+  // 해당 역할만 보여주기
   const role = data.role;
   if (role === "superadmin") {
     document.getElementById("superAdminPanel").classList.remove("hidden");
@@ -64,6 +72,7 @@ async function showMainUI(user) {
   loadProfileImage(user);
   loadWeightList(user);
 }
+
 
 // 회원가입
 async function signup() {
