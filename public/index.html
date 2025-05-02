@@ -43,6 +43,10 @@
       <input type="text" id="playerName" placeholder="선수 이름">
       <button onclick="signup()">회원가입</button>
       <button onclick="login()">로그인</button>
+      <label>
+        <input type="checkbox" id="adminRequestCheckbox"> 관리자(감독/코치)로 신청
+      </label>
+      
     </div>
 
     <!-- 로그인 후 메인 UI -->
@@ -51,7 +55,10 @@
 
       <div id="superAdminPanel" class="hidden">
         <h3>📊 전체 팀 데이터 보기 (슈퍼관리자)</h3>
+        <h4>📝 관리자 승인 대기 목록</h4>
+        <div id="adminRequests"></div> <!-- 여기에 동적으로 버튼이 생성됨 -->
       </div>
+      
 
       <div id="teamAdminPanel" class="hidden">
         <h3>📂 우리 팀 선수 목록 (관리자)</h3>

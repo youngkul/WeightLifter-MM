@@ -52,15 +52,11 @@ async function showMainUI(user) {
     return;
   }
 
-  // 모든 역할 패널 먼저 숨기기
-  document.getElementById("superAdminPanel").classList.add("hidden");
-  document.getElementById("teamAdminPanel").classList.add("hidden");
-  document.getElementById("playerPanel").classList.add("hidden");
-
-  // 해당 역할만 보여주기
   const role = data.role;
+
   if (role === "superadmin") {
     document.getElementById("superAdminPanel").classList.remove("hidden");
+    loadPendingAdmins(); // 🔥 여기서 관리자 승인 목록 로드!
   } else if (role === "admin") {
     document.getElementById("teamAdminPanel").classList.remove("hidden");
   } else {
@@ -74,6 +70,7 @@ async function showMainUI(user) {
 }
 
 
+
 // 회원가입
 async function signup() {
   const email = document.getElementById("email").value.trim();
@@ -81,6 +78,7 @@ async function signup() {
   const region = document.getElementById("region").value;
   const team = document.getElementById("team").value.trim();
   const name = document.getElementById("playerName").value.trim();
+  const pendingAdmin = document.getElementById("adminRequestCheckbox").checked;
 
   if (!region || !team || !name) {
     return alert("시/도, 팀명, 선수 이름을 모두 입력하세요.");
@@ -96,12 +94,14 @@ async function signup() {
       region,
       team,
       name,
-      role: "player",
+      role: "player",           // 기본 역할은 선수
+      pendingAdmin: pendingAdmin // 체크박스 상태 반영
     },
   ]);
 
   alert("회원가입 성공! 로그인해주세요.");
 }
+
 
 // 로그인
 async function login() {
@@ -192,6 +192,36 @@ async function saveRecords() {
 
   await supabase.from("records").upsert([records], { onConflict: ["uid"] });
   loadRecordsChart(session.user);
+}
+async function loadPendingAdmins() {
+  const { data, error } = await supabase
+    .from("players")
+    .select("uid, name, email, team, region")
+    .eq("pendingAdmin", true);
+
+  if (error) {
+    console.error("신청 목록 오류:", error.message);
+    return;
+  }
+
+  const container = document.getElementById("adminRequests");
+  container.innerHTML = "";
+
+  if (data.length === 0) {
+    container.innerHTML = "<p>현재 승인 대기 중인 신청자가 없습니다.</p>";
+    return;
+  }
+
+  data.forEach(user => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <p><strong>${user.name}</strong> (${user.email})<br>
+      팀: ${user.team}, 지역: ${user.region}<br>
+      <button onclick="approveAdmin('${user.uid}')">✅ 승인</button>
+      </p><hr>
+    `;
+    container.appendChild(div);
+  });
 }
 
 // 이미지 업로드
@@ -294,6 +324,21 @@ async function saveWeight() {
 }
 window.saveWeight = saveWeight;
 
+async function approveAdmin(uid) {
+  const { error } = await supabase
+    .from("players")
+    .update({ role: "admin", pendingAdmin: false })
+    .eq("uid", uid);
+
+  if (error) {
+    console.error("승인 실패:", error.message);
+    alert("승인 중 오류 발생");
+    return;
+  }
+
+  alert("관리자 승인이 완료되었습니다.");
+  location.reload(); // 새로고침하여 목록 갱신
+}
 
 // 전역 연결
 window.signup = signup;
@@ -304,6 +349,7 @@ window.saveRecords = saveRecords;
 window.uploadProfileImage = uploadProfileImage;
 window.deleteProfileImage = deleteProfileImage;
 window.deleteWeight = deleteWeight;
+window.approveAdmin = approveAdmin;
 
 document.addEventListener("DOMContentLoaded", () => {
   checkAuth();
