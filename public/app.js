@@ -160,7 +160,7 @@ async function loadWeightList(user) {
     });
   });
 }
-
+console.log("✅ .accordion-header count:", document.querySelectorAll(".accordion-header").length);
 
 async function deleteWeight(id) {
   if (!confirm("정말 삭제하시겠습니까?")) return;
