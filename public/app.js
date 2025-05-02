@@ -78,14 +78,14 @@ async function signup() {
   const region = document.getElementById("region").value;
   const team = document.getElementById("team").value.trim();
   const name = document.getElementById("playerName").value.trim();
-  const pendingAdmin = document.getElementById("adminRequestCheckbox").checked;
+  const pendingAdmin = document.getElementById("adminRequestCheckbox")?.checked || false;
 
   if (!region || !team || !name) {
     return alert("시/도, 팀명, 선수 이름을 모두 입력하세요.");
   }
 
   const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) return alert(error.message);
+  if (error) return alert("회원가입 오류: " + error.message);
 
   const { error: insertError } = await supabase.from("players").insert([
     {
@@ -94,18 +94,19 @@ async function signup() {
       region,
       team,
       name,
-      role: "player",           // 기본 역할은 선수
-      pendingAdmin: pendingAdmin // 체크박스 상태 반영
-    },
+      role: "player", // 기본 역할
+      pendingAdmin: pendingAdmin
+    }
   ]);
 
   if (insertError) {
-    console.error("플레이어 등록 오류:", insertError.message); // 🔍 오류 확인
+    console.error("⚠️ 플레이어 등록 오류:", insertError.message);
     return alert("회원 정보 저장 실패: " + insertError.message);
   }
 
   alert("회원가입 성공! 로그인해주세요.");
 }
+
 
 
 // 로그인
