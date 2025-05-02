@@ -154,11 +154,15 @@ async function loadWeightList(user) {
     weightList.appendChild(item);
   });
 
-  document.querySelectorAll(".accordion-header").forEach(button => {
-    button.addEventListener("click", () => {
-      button.classList.toggle("active");
+  document.querySelectorAll(".accordion-header").forEach(header => {
+    header.addEventListener("click", () => {
+      header.classList.toggle("active");
+      const body = header.nextElementSibling;
+      body.style.display = body.style.display === "block" ? "none" : "block";
     });
   });
+  
+  
   
 }
 
