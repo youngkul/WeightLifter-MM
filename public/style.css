@@ -9,7 +9,6 @@ body {
   align-items: stretch;
 }
 
-
 .container {
   width: 100%;
   max-width: 560px;
@@ -20,14 +19,12 @@ body {
   margin: 30px auto;
 }
 
-
 h2 {
   text-align: center;
   color: #2e7d32;
   margin-bottom: 30px;
   font-size: 26px;
 }
-
 
 input, select {
   width: 100%;
@@ -46,7 +43,6 @@ input:focus, select:focus {
   border-color: #636684;
   box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
 }
-
 
 button {
   width: 100%;
@@ -71,11 +67,9 @@ button:active {
   transform: scale(0.98);
 }
 
-
 .hidden {
   display: none;
 }
-
 
 #profileImage {
   max-width: 100%;
@@ -84,14 +78,12 @@ button:active {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
 canvas {
   margin-top: 20px;
   width: 100% !important;
   height: auto !important;
   display: block;
 }
-
 
 @media (max-width: 600px) {
   .container {
@@ -107,6 +99,8 @@ canvas {
     font-size: 15px;
   }
 }
+
+/* ✅ 아코디언 스타일 */
 .accordion-item {
   border: 1px solid #ccc;
   border-radius: 12px;
@@ -130,15 +124,18 @@ canvas {
   background-color: #cbd5e1;
 }
 
+/* ✅ 중요한 부분: 펼치기/접기 */
 .accordion-body {
   padding: 14px;
-  display: none;
+  display: none !important;
   background-color: #ffffff;
 }
 
 .accordion-header.active + .accordion-body {
-  display: block;
+  display: block !important;
 }
+
+/* details 요소 스타일 */
 details summary {
   cursor: pointer;
   font-size: 17px;
@@ -149,14 +146,17 @@ details summary {
   margin-top: 10px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
+
 details[open] > summary::after {
   content: " ▲";
 }
+
 details > summary::after {
   content: " ▼";
   margin-left: 6px;
 }
 
+/* 체중 테이블 */
 #weightTable {
   width: 100%;
   border-collapse: collapse;
@@ -173,6 +173,8 @@ details > summary::after {
   background-color: #f1f5f9;
   font-weight: bold;
 }
+
+/* 관리자 패널 스타일 */
 #superAdminPanel {
   border-left: 6px solid #2e7d32;
   background-color: #e8f5e9;
