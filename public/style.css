@@ -124,15 +124,14 @@ canvas {
   background-color: #cbd5e1;
 }
 
-/* ✅ 중요한 부분: 펼치기/접기 */
 .accordion-body {
   padding: 14px;
-  display: none !important;
+  display: none; 
   background-color: #ffffff;
 }
 
 .accordion-header.active + .accordion-body {
-  display: block !important;
+  display: block; 
 }
 
 /* details 요소 스타일 */
@@ -204,3 +203,4 @@ details > summary::after {
 #playerPanel h3 {
   margin-top: 0;
 }
+
