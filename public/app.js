@@ -28,14 +28,12 @@ async function showMainUI(user) {
   loginSection.classList.add("hidden");
   mainSection.classList.remove("hidden");
   welcome.innerText = `환영합니다, ${user.email}!`;
-  console.log("user.id:", user.id);  // ✅ 이 줄 추가
 
-  // 👉 role 조회
   const { data, error } = await supabase
     .from("players")
     .select("role")
     .eq("uid", user.id)
-    .maybeSingle();  // ← 여러 개거나 없을 때도 에러 대신 null 반환
+    .maybeSingle();
 
   if (error) {
     console.error("역할 불러오기 오류:", error.message);
@@ -51,7 +49,7 @@ async function showMainUI(user) {
   console.log("로그인 사용자 역할:", role);
 
   if (role === "superadmin") {
-    console.log("✅ superadmin 조건 통과"); 
+    console.log("✅ superadmin 조건 통과");
     document.getElementById("superAdminPanel").classList.remove("hidden");
   } else if (role === "admin") {
     console.log("✅ admin 조건 통과");
@@ -67,8 +65,6 @@ async function showMainUI(user) {
   loadWeightList(user);
 }
 
-
-// ✅ 회원가입
 async function signup() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -83,7 +79,6 @@ async function signup() {
   const { data, error } = await supabase.auth.signUp({ email, password });
   if (error) return alert(error.message);
 
-  // ✅ 추가 정보 저장
   await supabase.from("players").insert([
     {
       uid: data.user.id,
@@ -91,14 +86,13 @@ async function signup() {
       region,
       team,
       name,
-      role: "player"  // 기본은 일반 선수로 등록
+      role: "player"
     }
   ]);
 
   alert("회원가입 성공! 로그인해주세요.");
 }
 
-// 로그인
 async function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
@@ -106,7 +100,6 @@ async function login() {
   if (error) alert(error.message);
 }
 
-// 로그아웃
 async function logout() {
   const { error } = await supabase.auth.signOut();
   if (error) {
@@ -118,8 +111,6 @@ async function logout() {
   }
 }
 
-
-// 체중 저장
 async function saveWeight() {
   const date = document.getElementById("weightDateInput").value;
   const weight = parseFloat(document.getElementById("weightInput").value);
@@ -131,7 +122,6 @@ async function saveWeight() {
   loadWeightList(session.user);
 }
 
-// 아코디언 스타일 체중 목록 불러오기
 async function loadWeightList(user) {
   const { data, error } = await supabase
     .from("weights")
@@ -142,11 +132,13 @@ async function loadWeightList(user) {
   weightList.innerHTML = "";
 
   data.forEach(row => {
+    if (!row.date || !row.weight) return;
+
     const item = document.createElement("div");
     item.className = "accordion-item";
     item.innerHTML = `
       <button class="accordion-header">${row.date}</button>
-      <div class="accordion-body">
+      <div class="accordion-body" style="display: none;">
         <p>체중: ${row.weight}kg</p>
         <button onclick="deleteWeight(${row.id})">삭제</button>
       </div>
@@ -154,20 +146,17 @@ async function loadWeightList(user) {
     weightList.appendChild(item);
   });
 
-  document.querySelectorAll(".accordion-header").forEach(header => {
-    header.addEventListener("click", () => {
-      header.classList.toggle("active");
-      const body = header.nextElementSibling;
-      body.style.display = body.style.display === "block" ? "none" : "block";
+  document.querySelectorAll(".accordion-header").forEach(button => {
+    button.addEventListener("click", () => {
+      button.classList.toggle("active");
+      const body = button.nextElementSibling;
+      if (body) {
+        body.style.display = body.style.display === "block" ? "none" : "block";
+      }
     });
   });
-  
-  
-  
 }
 
-
-// 체중 삭제
 async function deleteWeight(id) {
   if (!confirm("정말 삭제하시겠습니까?")) return;
   await supabase.from("weights").delete().eq("id", id);
@@ -176,7 +165,6 @@ async function deleteWeight(id) {
   loadWeightList(session.user);
 }
 
-// 종목별 기록 저장
 async function saveRecords() {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return;
@@ -195,7 +183,6 @@ async function saveRecords() {
   loadRecordsChart(session.user);
 }
 
-// 프로필 이미지 업로드
 async function uploadProfileImage() {
   const file = document.getElementById("profileImageInput").files[0];
   const { data: { session } } = await supabase.auth.getSession();
@@ -208,7 +195,6 @@ async function uploadProfileImage() {
   loadProfileImage(session.user);
 }
 
-// 프로필 이미지 불러오기
 async function loadProfileImage(user) {
   const { data, error } = await supabase.storage
     .from("profiles")
@@ -225,7 +211,6 @@ async function loadProfileImage(user) {
   img.src = data.publicUrl;
 }
 
-// 프로필 이미지 삭제
 async function deleteProfileImage() {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return;
@@ -236,7 +221,6 @@ async function deleteProfileImage() {
   document.getElementById("profileImage").src = "";
 }
 
-// 전역 함수 등록
 window.signup = signup;
 window.login = login;
 window.logout = logout;
@@ -249,4 +233,3 @@ window.deleteWeight = deleteWeight;
 document.addEventListener("DOMContentLoaded", () => {
   checkAuth();
 });
-
