@@ -132,13 +132,11 @@ async function loadWeightList(user) {
   weightList.innerHTML = "";
 
   data.forEach(row => {
-    if (!row.date || !row.weight) return;
-
     const item = document.createElement("div");
     item.className = "accordion-item";
     item.innerHTML = `
       <button class="accordion-header">${row.date}</button>
-      <div class="accordion-body" style="display: none;">
+      <div class="accordion-body">
         <p>체중: ${row.weight}kg</p>
         <button onclick="deleteWeight(${row.id})">삭제</button>
       </div>
@@ -146,16 +144,23 @@ async function loadWeightList(user) {
     weightList.appendChild(item);
   });
 
-  document.querySelectorAll(".accordion-header").forEach(button => {
-    button.addEventListener("click", () => {
-      button.classList.toggle("active");
-      const body = button.nextElementSibling;
-      if (body) {
-        body.style.display = body.style.display === "block" ? "none" : "block";
+  // ✅ 접기/펼치기 동작
+  document.querySelectorAll(".accordion-header").forEach(header => {
+    header.addEventListener("click", () => {
+      const body = header.nextElementSibling;
+      const isOpen = body.style.display === "block";
+
+      document.querySelectorAll(".accordion-body").forEach(b => b.style.display = "none");
+      document.querySelectorAll(".accordion-header").forEach(h => h.classList.remove("active"));
+
+      if (!isOpen) {
+        body.style.display = "block";
+        header.classList.add("active");
       }
     });
   });
 }
+
 
 async function deleteWeight(id) {
   if (!confirm("정말 삭제하시겠습니까?")) return;
