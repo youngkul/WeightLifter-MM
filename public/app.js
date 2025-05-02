@@ -1,3 +1,4 @@
+// ✅ app.js 전체 (Accordion 작동 포함)
 import { loadWeightChart, loadRecordsChart } from "./charts.js";
 import { supabase } from "./supabase-config.js";
 
@@ -35,27 +36,17 @@ async function showMainUI(user) {
     .eq("uid", user.id)
     .maybeSingle();
 
-  if (error) {
-    console.error("역할 불러오기 오류:", error.message);
-    return;
-  }
-
-  if (!data) {
-    console.warn("유저 역할 정보를 찾을 수 없습니다.");
-    return;
-  }
+  if (error) return console.error("역할 불러오기 오류:", error.message);
+  if (!data) return console.warn("유저 역할 정보를 찾을 수 없습니다.");
 
   const role = data.role;
   console.log("로그인 사용자 역할:", role);
 
   if (role === "superadmin") {
-    console.log("✅ superadmin 조건 통과");
     document.getElementById("superAdminPanel").classList.remove("hidden");
   } else if (role === "admin") {
-    console.log("✅ admin 조건 통과");
     document.getElementById("teamAdminPanel").classList.remove("hidden");
   } else {
-    console.log("✅ player 조건 통과");
     document.getElementById("playerPanel").classList.remove("hidden");
   }
 
@@ -72,24 +63,12 @@ async function signup() {
   const team = document.getElementById("team").value.trim();
   const name = document.getElementById("playerName").value.trim();
 
-  if (!region || !team || !name) {
-    return alert("시/도, 팀명, 선수 이름을 모두 입력하세요.");
-  }
+  if (!region || !team || !name) return alert("시/도, 팀명, 선수 이름을 모두 입력하세요.");
 
   const { data, error } = await supabase.auth.signUp({ email, password });
   if (error) return alert(error.message);
 
-  await supabase.from("players").insert([
-    {
-      uid: data.user.id,
-      email,
-      region,
-      team,
-      name,
-      role: "player"
-    }
-  ]);
-
+  await supabase.from("players").insert([{ uid: data.user.id, email, region, team, name, role: "player" }]);
   alert("회원가입 성공! 로그인해주세요.");
 }
 
@@ -102,10 +81,7 @@ async function login() {
 
 async function logout() {
   const { error } = await supabase.auth.signOut();
-  if (error) {
-    console.error("로그아웃 실패:", error.message);
-  } else {
-    console.log("로그아웃 성공");
+  if (!error) {
     loginSection.classList.remove("hidden");
     mainSection.classList.add("hidden");
   }
@@ -144,7 +120,6 @@ async function loadWeightList(user) {
     weightList.appendChild(item);
   });
 
-  // ✅ 접기/펼치기 동작
   document.querySelectorAll(".accordion-header").forEach(header => {
     header.addEventListener("click", () => {
       const body = header.nextElementSibling;
@@ -159,8 +134,9 @@ async function loadWeightList(user) {
       }
     });
   });
+
+  console.log("✅ .accordion-header count:", document.querySelectorAll(".accordion-header").length);
 }
-console.log("✅ .accordion-header count:", document.querySelectorAll(".accordion-header").length);
 
 async function deleteWeight(id) {
   if (!confirm("정말 삭제하시겠습니까?")) return;
@@ -201,18 +177,13 @@ async function uploadProfileImage() {
 }
 
 async function loadProfileImage(user) {
-  const { data, error } = await supabase.storage
-    .from("profiles")
-    .getPublicUrl(`${user.id}.jpg`);
-
+  const { data, error } = await supabase.storage.from("profiles").getPublicUrl(`${user.id}.jpg`);
   const img = document.getElementById("profileImage");
 
   if (error || !data?.publicUrl) {
-    console.error("이미지 불러오기 실패:", error?.message);
     img.src = "";
     return;
   }
-
   img.src = data.publicUrl;
 }
 
@@ -226,6 +197,7 @@ async function deleteProfileImage() {
   document.getElementById("profileImage").src = "";
 }
 
+// 전역 함수 등록
 window.signup = signup;
 window.login = login;
 window.logout = logout;
@@ -238,3 +210,4 @@ window.deleteWeight = deleteWeight;
 document.addEventListener("DOMContentLoaded", () => {
   checkAuth();
 });
+
