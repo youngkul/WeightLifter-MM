@@ -98,7 +98,10 @@ async function signup() {
       pendingAdmin: pendingAdmin // 체크박스 상태 반영
     },
   ]);
-
+  if (insertError) {
+    console.error("플레이어 등록 오류:", insertError.message); // 🔍 오류 확인
+    return alert("회원 정보 저장 실패: " + insertError.message);
+  }
   alert("회원가입 성공! 로그인해주세요.");
 }
 
