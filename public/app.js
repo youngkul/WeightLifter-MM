@@ -84,12 +84,33 @@ async function signup() {
     return alert("시/도, 팀명, 선수 이름을 모두 입력하세요.");
   }
 
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) return alert("회원가입 오류: " + error.message);
+  // 회원가입 시도
+  const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+    email,
+    password,
+  });
 
+  if (signUpError) {
+    console.error("회원가입 오류:", signUpError.message);
+    return alert("회원가입 실패: " + signUpError.message);
+  }
+
+  // 인증 메일 발송 옵션이 있는 경우 user가 null일 수 있음 → getUser로 확인
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    console.warn("유저 정보 확인 실패 (이메일 인증 전 상태일 수 있음)");
+    alert("회원가입은 완료되었습니다. 이메일 인증 후 로그인해주세요.");
+    return;
+  }
+
+  // players 테이블에 정보 저장
   const { data: insertData, error: insertError } = await supabase.from("players").insert([
     {
-      uid: data.user.id,
+      uid: user.id,
       email,
       region,
       team,
@@ -98,16 +119,16 @@ async function signup() {
       pendingAdmin: pendingAdmin
     }
   ]);
-  
-  console.log("🧾 INSERT 결과:", insertData); // 🔍 콘솔로 결과 확인
+
   if (insertError) {
-    console.error("⚠️ 플레이어 등록 오류:", insertError.message);
+    console.error("플레이어 등록 오류:", insertError.message);
     return alert("회원 정보 저장 실패: " + insertError.message);
   }
-  
 
+  console.log("🧾 INSERT 결과:", insertData);
   alert("회원가입 성공! 로그인해주세요.");
 }
+
 
 
 
