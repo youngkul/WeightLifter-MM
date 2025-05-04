@@ -87,22 +87,24 @@ async function signup() {
   const { data, error } = await supabase.auth.signUp({ email, password });
   if (error) return alert("회원가입 오류: " + error.message);
 
-  const { error: insertError } = await supabase.from("players").insert([
+  const { data: insertData, error: insertError } = await supabase.from("players").insert([
     {
       uid: data.user.id,
       email,
       region,
       team,
       name,
-      role: "player", // 기본 역할
+      role: "player",
       pendingAdmin: pendingAdmin
     }
   ]);
-
+  
+  console.log("🧾 INSERT 결과:", insertData); // 🔍 콘솔로 결과 확인
   if (insertError) {
     console.error("⚠️ 플레이어 등록 오류:", insertError.message);
     return alert("회원 정보 저장 실패: " + insertError.message);
   }
+  
 
   alert("회원가입 성공! 로그인해주세요.");
 }
